@@ -6,22 +6,20 @@ FSJS project 8 - SQL Library Manager
 const express = require('express');
 const app = express();
 
+const books = require('./routes/books');
+
 app.set('view engine', 'pug');
 
+app.use(express.urlencoded({ extended: false }));
 app.use('/static',express.static('public'));
 
-app.get('/',(req,res) => {
-    res.render('index');
-});
-
-app.get('/book/:id',(req,res,next) => {
-   
-});
+app.use('/', books);
 
 app.use((req,res,next) => {
     const err =  new Error('The page you requested, can not be found.');
     err.status = 404;
     console.log(err.status + ': The page you requested, can not be found.');
+    //res.render('page-not-found');
     next(err);
 });
 
