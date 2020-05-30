@@ -20,7 +20,7 @@ books.get('/', (req, res) => res.redirect('/books'));
 books.get(
   '/books',
   base_error_handler(async (req, res) => {
-    const books = await Book.findAll({ order: [['createdAt', 'DESC']] });
+    const books = await Book.findAll({ });
     res.render('index', { books });
   })
 );
@@ -60,7 +60,8 @@ books.get(
     if (book) {
       res.render('book-detail', { book });
     } else {
-      res.sendStatus(404);
+      res.status(500);
+      res.render('error');
     }
   })
 );
@@ -76,7 +77,8 @@ books.post(
         await book.update(req.body);
         res.redirect('/');
       } else {
-        res.sendStatus(404);
+        res.status(500);
+        res.render('error');
       }
     } catch (error) {
       if (error.name === 'SequelizeValidationError') {
@@ -102,7 +104,8 @@ books.post(
       await book.destroy();
       res.redirect('/');
     } else {
-      res.sendStatus(404);
+      res.status(500);
+      res.render('error');
     }
   })
 );
