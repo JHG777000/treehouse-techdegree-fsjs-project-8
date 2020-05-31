@@ -2,27 +2,16 @@ const express = require('express');
 const books = express.Router();
 const Book = require('../models').models.Book;
 
-//base error handler
-const base_error_handler = (callback) => {
-  return async (req, res, next) => {
-    try {
-      await callback(req, res, next);
-    } catch (error) {
-      res.status(500).send(error);
-    }
-  };
-};
-
 //root route
 books.get('/', (req, res) => res.redirect('/books'));
 
 //get books
 books.get(
   '/books',
-  base_error_handler(async (req, res) => {
+ async (req, res) => {
     const books = await Book.findAll({ });
     res.render('index', { books });
-  })
+  }
 );
 
 //new book
@@ -33,7 +22,7 @@ books.get('/books/new', (req, res) => {
 //new book
 books.post(
   '/books/new',
-  base_error_handler(async (req, res) => {
+ async (req, res) => {
     let book;
     try {
       book = await Book.create(req.body);
@@ -46,16 +35,17 @@ books.post(
           errors: error.errors,
         });
       } else {
-        throw error;
+        res.status(500);
+        res.render('error');
       }
     }
-  })
+  }
 );
 
 //edit book
 books.get(
   '/books/:id',
-  base_error_handler(async (req, res) => {
+ async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
       res.render('book-detail', { book });
@@ -63,13 +53,13 @@ books.get(
       res.status(500);
       res.render('error');
     }
-  })
+  }
 );
 
 //edit book
 books.post(
   '/books/:id',
-  base_error_handler(async (req, res) => {
+ async (req, res) => {
     let book;
     try {
       book = await Book.findByPk(req.params.id);
@@ -89,16 +79,17 @@ books.post(
           errors: error.errors,
         });
       } else {
-        throw error;
+        res.status(500);
+        res.render('error');
       }
     }
-  })
+  }
 );
 
 // delete a book with id
 books.post(
   '/books/:id/delete',
-  base_error_handler(async (req, res) => {
+  async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     if (book) {
       await book.destroy();
@@ -107,7 +98,7 @@ books.post(
       res.status(500);
       res.render('error');
     }
-  })
+  }
 );
 
 module.exports = books;
