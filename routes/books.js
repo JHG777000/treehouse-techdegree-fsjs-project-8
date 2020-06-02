@@ -5,7 +5,7 @@ const Book = require('../models').models.Book;
 //root route
 books.get('/', (req, res) => res.redirect('/books'));
 
-//get books
+//get books - main page list all books
 books.get(
   '/books',
  async (req, res) => {
@@ -14,12 +14,12 @@ books.get(
   }
 );
 
-//new book
+//new book - create a new book page
 books.get('/books/new', (req, res) => {
   res.render('new-book', { book: {} });
 });
 
-//new book
+//new book - post new book back to database
 books.post(
   '/books/new',
  async (req, res) => {
@@ -42,7 +42,7 @@ books.post(
   }
 );
 
-//edit book
+//edit book - edit a book page
 books.get(
   '/books/:id',
  async (req, res) => {
@@ -56,7 +56,7 @@ books.get(
   }
 );
 
-//edit book
+//edit book - post edited book back to database
 books.post(
   '/books/:id',
  async (req, res) => {
